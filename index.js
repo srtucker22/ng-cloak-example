@@ -1,5 +1,5 @@
 if (Meteor.isClient) {
-  // counter starts at 0
+  // startup angular-meteor
   angular.module('app',['angular-meteor']);
 
   angular.module('app').config(loginCloakConfig);
@@ -15,13 +15,16 @@ if (Meteor.isClient) {
   
   function extendNgCloakDirective($delegate, $rootScope, $timeout){
     var directive = $delegate[0];
-      // make a copy of the old directive
+    
+    // make a copy of the old directive
     var _compile = directive.compile;
+    
     directive.compile = function(element, attr) {
       $rootScope.currentUserPromise.then(function(){
         $timeout(function(){_compile.call(directive, element, attr);}, 2000);   // wait a couple seconds to show it's working
       });
     };
+    
     // return the modified directive
     return $delegate;
   }
